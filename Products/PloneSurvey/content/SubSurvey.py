@@ -165,7 +165,6 @@ class SubSurvey(ATCTOrderedFolder):
             return True
         # find the right question
         questions = [{'question': required_question, 'answer': self.getRequiredAnswer()}] + list(required_questions)
-        print(questions)
         # TODO: this assumes that no questions exist with a duplicate id
         pages = parent.getFolderContents(
             contentFilter={'portal_type': 'Sub Survey', },
