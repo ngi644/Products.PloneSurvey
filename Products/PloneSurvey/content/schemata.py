@@ -19,10 +19,15 @@ from Products.ATContentTypes.lib.constraintypes \
     import ConstrainTypesMixinSchema
 from Products.ATContentTypes.content.schemata import finalizeATCTSchema
 
+from Products.DataGridField import DataGridField, DataGridWidget
+from Products.DataGridField.Column import Column
+from Products.DataGridField.SelectColumn import SelectColumn
+
 from Products.PloneSurvey import PloneSurveyMessageFactory as _
 from Products.PloneSurvey.config import NOTIFICATION_METHOD
 from Products.PloneSurvey.config import TEXT_INPUT_TYPE
 from Products.PloneSurvey.config import SELECT_INPUT_TYPE
+from Products.PloneSurvey.config import SELECT_INPUT_TYPE_MATRIX
 from Products.PloneSurvey.config import TEXT_LOCATION
 from Products.PloneSurvey.config import COMMENT_TYPE
 from Products.PloneSurvey.config import LIKERT_OPTIONS
@@ -274,6 +279,21 @@ SubSurveySchema = ATContentTypeSchema.copy() + Schema((
                         u"above to determine whether this Sub Survey is "
                         u"displayed."),
         ),
+    ),
+
+    DataGridField('requiredQuestionsAnswers',
+                  searchable=0,
+                  required=0,
+                  schemata="Branching",
+                  columns=("question", "answer"),
+                  widget=DataGridWidget(
+                      columns={
+                          'question': SelectColumn("Conditional Question",
+                                                   vocabulary="getValidationQuestions",
+                                                   required=True),
+                          'answer': Column("Required Answer", required=True)
+                      },
+                  ),
     ),
 
     BooleanField(
@@ -674,7 +694,7 @@ SurveyMatrixSchema = BaseQuestionSchema.copy() + Schema((
         'inputType',
         searchable=0,
         required=0,
-        vocabulary=SELECT_INPUT_TYPE,
+        vocabulary=SELECT_INPUT_TYPE_MATRIX,
         widget=SelectionWidget(
             label=_("label_input_type", default=u"Input Type"),
             description=_(

@@ -95,4 +95,25 @@ class SurveyMatrix(ATCTOrderedFolder, BaseQuestion):
             full_objects=True)
         return questions
 
+    security.declareProtected(permissions.View, 'getScript')
+
+    def getScript(self, qid, mqid):
+
+        id_title = "{qid}-{mqid}".format(qid=qid, mqid=mqid)
+        sc = """
+                    <script>
+                        $('input[name="{id_title}"][type="radio"]').prop("disabled", true);
+
+                        $('input[name="{id_title}"][type="checkbox"]').change(function() {{
+                            if ( $(this).is(':checked') ){{
+                                $('input[name="{id_title}"][type="radio"]').prop('disabled', false);
+                            }} else {{
+                                $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
+                            }}
+                        }});
+
+                    </script>
+        """.format(id_title=id_title)
+        return sc
+
 registerATCT(SurveyMatrix, PROJECTNAME)

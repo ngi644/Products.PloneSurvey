@@ -5,6 +5,7 @@ from Products.ATContentTypes.content.base import ATCTOrderedFolder
 from Products.ATContentTypes.content.base import registerATCT
 from Products.CMFCore import permissions
 from Products.CMFCore.utils import getToolByName
+from Products.Archetypes.public import DisplayList
 
 from Products.PloneSurvey.config import PROJECTNAME
 
@@ -73,11 +74,11 @@ class SubSurvey(ATCTOrderedFolder):
             portal_type=['Survey Select Question', ],
             path=path)
         for result in results:
-            object = result.getObject()
-            questions.append((object.getId(), object.Title() + ', ' +
-                             str(object.getQuestionOptions())))
+            obj = result.getObject()
+            title = '{}:{}'.format(obj.Title(), ','.join(obj.getQuestionOptions()))
+            questions.append((obj.getId(), title))
         # vocab_list = DisplayList((questions))
-        return questions
+        return DisplayList((questions))
 
     security.declareProtected(permissions.View, 'getBranchingCondition')
 
@@ -86,7 +87,7 @@ class SubSurvey(ATCTOrderedFolder):
         branchings = ''
         required_question = self.getRequiredQuestion()
         branch_question = self[required_question]
-        branchings = branch_question.Title()+':'+self.getRequiredAnswer()
+        branchings = branch_question.Title() + ':' + self.getRequiredAnswer()
         return branchings
 
     security.declareProtected(permissions.View, 'getQuestions')
@@ -159,37 +160,47 @@ class SubSurvey(ATCTOrderedFolder):
         parent = self.aq_parent
         userid = parent.getSurveyId()
         required_question = self.getRequiredQuestion()
-        if not required_question:
+        required_questions = self.getRequiredQuestionsAnswers()
+        if not required_question and not required_questions:
             return True
         # find the right question
+        questions = [{'question': required_question, 'answer': self.getRequiredAnswer()}] + list(required_questions)
+        print(questions)
         # TODO: this assumes that no questions exist with a duplicate id
-        if required_question in parent.objectIds():
-            question = parent[required_question]
-        else:
-            pages = parent.getFolderContents(
-                contentFilter={'portal_type': 'Sub Survey', },
-                full_objects=True)
-            for page in pages:
-                if required_question in page.objectIds():
-                    question = page[required_question]
-                    break
+        pages = parent.getFolderContents(
+            contentFilter={'portal_type': 'Sub Survey', },
+            full_objects=True)
+        right_answer = False
+        for qa in questions:
+            if qa['question'] in parent.objectIds():
+                question = parent[qa['question']]
+                required_answers = qa['answer'].split('|')
+                answer = question.getAnswerFor(userid)
+                if hasattr(answer, 'lower'):
+                    if answer in required_answers:
+                        right_answer = True
+                elif hasattr(answer, 'append'):  # it's a list
+                    if len(set(required_answers) and set(answer)):
+                        right_answer = True
+            else:
+                for page in pages:
+                    if qa['question'] in page.objectIds():
+                        question = page[qa['question']]
+                        required_answers = qa['answer'].split('|')
+                        answer = question.getAnswerFor(userid)
+                        if hasattr(answer, 'lower'):
+                            if answer in required_answers:
+                                right_answer = True
+                        elif hasattr(answer, 'append'):  # it's a list
+                            if len(set(required_answers) and set(answer)):
+                                right_answer = True
         # TODO: this assumes the question actually exists
-        required_answer = self.getRequiredAnswer()
         required_positive = self.getRequiredAnswerYesNo()
-        answer = question.getAnswerFor(userid)
-        if hasattr(answer, 'lower'):
-            if required_positive and answer == required_answer:
-                return True
-            elif answer != required_answer and not required_positive:
-                return True
-            return False
-        elif hasattr(answer, 'append'):  # it's a list
-            if required_positive and required_answer in answer:
-                return True
-            elif required_answer not in answer and not required_positive:
-                return True
-            return False
-        else:  # question not answered, so don't display
-            return False
+        if required_positive and right_answer:
+            return True
+        elif not right_answer and not required_positive:
+            return True
+        return False
+
 
 registerATCT(SubSurvey, PROJECTNAME)

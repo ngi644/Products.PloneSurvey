@@ -31,11 +31,11 @@
             <th class="questionColumn nosort"
                 i18n:translate="label_matrix_question">Question</th>
             <th class="nosort" style="text-transform: none;"
-                tal:condition="python:input_type in ['radio', 'checkbox']"
+                tal:condition="python:input_type in ['radio', 'checkbox', 'checkbox_radio']"
                 tal:repeat="option options"
                 tal:content="python:hasattr(options, 'getValue') and options.getValue(option) or option "/>
             <th class="nosort" style="text-transform: none;"
-                  tal:condition="python:input_type not in ['radio', 'checkbox']">
+                  tal:condition="python:input_type not in ['radio', 'checkbox', 'checkbox_radio']">
                 Select Option
             </th>
         </tr>
@@ -105,6 +105,33 @@
                                            id string:${qid}-${mqid};
                                            checked python: answer and option in answer;"/>
                 </td>
+                <td tal:condition="python:input_type == 'checkbox_radio'"
+                    tal:repeat="option question/getQuestionOptions">
+                    <input type="checkbox"
+                           class="noborder"
+                           name="answer"
+                           value="option"
+                           tal:condition="repeat/option/start"
+                           tal:define="answer python:request.get(str(qid) + '-' + str(mqid), None) or matrix_question.getAnswerFor(member_id);"
+                           tal:attributes="value option;
+                                           name string:${qid}-${mqid};
+                                           id string:${qid}-${mqid};
+                                           checked python: answer and option in answer;"/>
+                    <input type="radio"
+                           class="noborder"
+                           tal:condition="not:repeat/option/start"
+                           tal:define="answer python:request.get(str(qid) + '-' + str(mqid), None) or matrix_question.getAnswerFor(member_id);"
+                           tal:attributes="value option;
+                                           name string:${qid}-${mqid};
+                                           id string:${qid}-${mqid};
+                                           checked python:str(option) == answer;
+                                           disabled python:" />
+
+                    <div tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
+
+                </td>
+
+
             </div>
         </tr>
     </table>

@@ -34,6 +34,15 @@ SELECT_INPUT_TYPE = DisplayList((
     ('checkbox', _(u'label_check_boxes', default=u'Check Boxes')),
     ))
 
+SELECT_INPUT_TYPE_MATRIX = DisplayList((
+    ('radio', _(u'label_radio_buttons', default=u'Radio Buttons')),
+    ('selectionBox', _(u'label_selection_box', default=u'Selection Box')),
+    ('multipleSelect', _(u'label_multiple_selection_box',
+                         default=u'Multiple Selection Box')),
+    ('checkbox', _(u'label_check_boxes', default=u'Check Boxes')),
+    ('checkbox_radio', _(u'label_check_boxe_radio_buttons', default=u'Check Boxe + Radio Buttons')),
+    ))
+
 TEXT_LOCATION = IntDisplayList((
     (0, _(u'label_does_not_appear', default=u'Does not appear')),
     (1, _(u'label_appears_above_question', default=u'Appears above question')),
