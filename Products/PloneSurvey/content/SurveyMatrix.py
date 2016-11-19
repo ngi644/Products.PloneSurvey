@@ -102,7 +102,6 @@ class SurveyMatrix(ATCTOrderedFolder, BaseQuestion):
         id_title = "{qid}-{mqid}".format(qid=qid, mqid=mqid)
         sc = """
                     <script>
-                        $('input[name="{id_title}"][type="radio"]').prop("disabled", true);
 
                         $('input[name="{id_title}"][type="checkbox"]').change(function() {{
                             if ( $(this).is(':checked') ){{
@@ -111,6 +110,12 @@ class SurveyMatrix(ATCTOrderedFolder, BaseQuestion):
                                 $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
                             }}
                         }});
+
+                        if ( $('input[name="{id_title}"][type="checkbox"]').is(':checked') ){{
+                            $('input[name="{id_title}"][type="radio"]').prop('disabled', false);
+                        }} else {{
+                            $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
+                        }}
 
                     </script>
         """.format(id_title=id_title)

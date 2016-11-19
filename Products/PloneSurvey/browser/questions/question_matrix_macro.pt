@@ -124,7 +124,7 @@
                            tal:attributes="value option;
                                            name string:${qid}-${mqid};
                                            id string:${qid}-${mqid};
-                                           checked python:str(option) == answer;
+                                           checked python: answer and option in answer;
                                            disabled python:" />
 
                     <div tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
