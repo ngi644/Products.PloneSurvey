@@ -97,6 +97,24 @@ class SurveySelectQuestion(BaseQuestion):
             return vocab
         return self.getAnswerOptions()
 
+
+    security.declareProtected(permissions.View, 'getQuestionOptionsList')
+
+    def getQuestionOptionsList(self):
+        """Return the options for this question"""
+
+        aops = self.getAnswerOptions()
+        dict_options = {}
+        for aop in aops:
+            op_s = aop.split(':')
+            if len(op_s) == 2:
+                if not dict_options.get(op_s[0]):
+                    dict_options[op_s[0]] = [op_s[1]]
+                else:
+                    dict_options[op_s[0]].append(op_s[1])
+        return dict_options
+
+
     security.declareProtected(permissions.View, 'getAggregateAnswers')
 
     def getAggregateAnswers(self):
@@ -158,5 +176,20 @@ class SurveySelectQuestion(BaseQuestion):
                 value = v/float(total)
             pct_answers[k] = int(value * 100)
         return pct_answers
+
+    security.declareProtected(permissions.View, 'getScript')
+
+    def getScript(self, qid):
+        sc = """
+        <script>
+            $('#{qid}').tgHierSelectV2({{
+                    group: 'g_{qid}',
+                    maxLevel: '2',
+                    defaultSelect: '-- Please, select --'
+                    }});
+        </script>
+        """.format(qid=qid)
+        return sc
+
 
 registerATCT(SurveySelectQuestion, PROJECTNAME)

@@ -4,4 +4,9 @@
     enabled="True"
     expression="python:'survey_reset_form' in request.URL"
     id="++resource++Products.PloneSurvey.javascripts/survey_reset.js" inline="False"/>
+
+  <javascript cacheable="True" compression="safe" cookable="True"
+    enabled="True"
+    id="++resource++Products.PloneSurvey.javascripts/jquery.tgHierSelectV2.js" inline="False"/>
+
 </object>

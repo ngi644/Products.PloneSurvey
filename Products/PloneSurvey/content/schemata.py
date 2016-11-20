@@ -27,6 +27,7 @@ from Products.PloneSurvey import PloneSurveyMessageFactory as _
 from Products.PloneSurvey.config import NOTIFICATION_METHOD
 from Products.PloneSurvey.config import TEXT_INPUT_TYPE
 from Products.PloneSurvey.config import SELECT_INPUT_TYPE
+from Products.PloneSurvey.config import SELECT_INPUT_TYPE_2
 from Products.PloneSurvey.config import SELECT_INPUT_TYPE_MATRIX
 from Products.PloneSurvey.config import TEXT_LOCATION
 from Products.PloneSurvey.config import COMMENT_TYPE
@@ -616,7 +617,7 @@ SurveySelectQuestionSchema = BaseQuestionSchema.copy() + Schema((
         'inputType',
         searchable=0,
         required=0,
-        vocabulary=SELECT_INPUT_TYPE,
+        vocabulary=SELECT_INPUT_TYPE_2,
         widget=SelectionWidget(
             label=_("label_input_type", default="Input Type"),
             description=_(

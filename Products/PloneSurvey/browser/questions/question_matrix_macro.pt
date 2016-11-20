@@ -127,10 +127,8 @@
                                            checked python: answer and option in answer;
                                            disabled python:" />
 
-                    <div tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
-
                 </td>
-
+                <div tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
 
             </div>
         </tr>

@@ -56,6 +56,59 @@
                     tal:content="python:hasattr(question.getQuestionOptions(), 'getValue') and question.getQuestionOptions().getValue(option) or option" />
         </select>
 
+        <tal:sel2 tal:condition="python:question.getInputType() == 'selectionBox2' and hasOptions">
+
+            <tal:sel2_body tal:define="dict_options question/getQuestionOptionsList;
+                       option_1st python:dict_options.keys();
+                       option_items python:dict_options.items()">
+
+                <select tal:define="null_value question/getNullValue|nothing;"
+                    tal:attributes="name string:${qid}p;
+                           id string:lv1;
+                           class string:g_${qid}">
+
+                   <option class="noborder" value="0"
+                            i18n:translate="Please select"
+                            tal:condition="not:null_value">-- Please, select --</option>
+                    <option tal:repeat="op_lv1 option_1st"
+                            class="noborder"
+                            tal:attributes="value repeat/op_lv1/number;
+                                   selected python:answer and answer.split(':')[0] == op_lv1"
+                            i18n:translate=""
+                            tal:content="op_lv1" />
+                </select>
+
+                <select tal:define="null_value question/getNullValue|nothing;"
+                    tal:attributes="name string:${qid};
+                           id string:lv2;
+                           class string:g_${qid}">
+
+                   <option class="noborder" value=""
+                            i18n:translate="Please select"
+                            tal:condition="not:null_value">-- Please, select --</option>
+                    <tal:lv2 tal:repeat="op_itm option_items">
+                        <option tal:repeat="op_d python:op_itm[1]"
+                            class="noborder"
+                            tal:attributes="value python:op_itm[0] + ':' + op_d;
+                                   selected python:answer and answer == op_itm[0] + ':' + op_d;
+                                         class string:p${repeat/op_itm/number}"
+
+                            i18n:translate=""
+                            tal:content="op_d" />
+                    </tal:lv2>
+
+                </select>
+
+            </tal:sel2_body>
+
+            <div tal:content="structure python:question.getScript(qid)"></div>
+
+
+        </tal:sel2>
+
+
+
+
         <select tal:condition="python:question.getInputType() == 'multipleSelect' and hasOptions"
                 multiple="multiple"
                 tal:attributes="name qid;">
