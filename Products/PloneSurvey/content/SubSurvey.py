@@ -164,7 +164,11 @@ class SubSurvey(ATCTOrderedFolder):
         if not required_question and not required_questions:
             return True
         # find the right question
-        questions = [{'question': required_question, 'answer': self.getRequiredAnswer()}] + list(required_questions)
+        questions = []
+        if required_question:
+            questions.append({'question': required_question, 'answer': self.getRequiredAnswer()})
+        if required_questions:
+            questions = questions + list(required_questions)
         # TODO: this assumes that no questions exist with a duplicate id
         pages = parent.getFolderContents(
             contentFilter={'portal_type': 'Sub Survey', },
@@ -195,9 +199,10 @@ class SubSurvey(ATCTOrderedFolder):
                                 right_answer = True
         # TODO: this assumes the question actually exists
         required_positive = self.getRequiredAnswerYesNo()
+        # print(right_answer, required_positive)
         if required_positive and right_answer:
             return True
-        elif not right_answer and not required_positive:
+        elif not required_positive:
             return True
         return False
 
