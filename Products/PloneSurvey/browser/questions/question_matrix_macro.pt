@@ -127,8 +127,12 @@
                                            checked python: answer and option in answer;
                                            disabled python:" />
 
+
                 </td>
-                <div tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
+
+                <div tal:condition="python:input_type == 'checkbox_radio'"
+                    tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
+
 
             </div>
         </tr>
