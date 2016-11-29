@@ -69,6 +69,9 @@ class SurveySelectQuestion(BaseQuestion):
             # and if neither value or comments is
             # provided, then None is stored instead of empty string
             self.addAnswer(value, comments)
+        else:
+            null_value = self.getNullValue()
+            self.addAnswer(null_value, comments)
 
     security.declareProtected(permissions.View, 'getRequired')
 
