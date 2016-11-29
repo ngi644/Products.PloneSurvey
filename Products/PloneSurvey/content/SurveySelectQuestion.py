@@ -29,6 +29,7 @@ class SurveySelectQuestion(BaseQuestion):
     def validateAnswer(self, value, comments, state):
         """Validate the question"""
         validates = True
+        null_value = self.getNullValue()
         if value:
             if hasattr(value, 'lower'):
                 if self.getLikertOptions():
@@ -68,9 +69,8 @@ class SurveySelectQuestion(BaseQuestion):
             # XXX something more intelligent needs to be done here,
             # and if neither value or comments is
             # provided, then None is stored instead of empty string
-            self.addAnswer(value, comments)
+            self.addAnswer(null_value, comments)
         else:
-            null_value = self.getNullValue()
             self.addAnswer(null_value, comments)
 
     security.declareProtected(permissions.View, 'getRequired')
