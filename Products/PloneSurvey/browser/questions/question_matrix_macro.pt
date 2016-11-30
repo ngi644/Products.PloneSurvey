@@ -31,11 +31,11 @@
             <th class="questionColumn nosort"
                 i18n:translate="label_matrix_question">Question</th>
             <th class="nosort" style="text-transform: none;"
-                tal:condition="python:input_type in ['radio', 'checkbox', 'checkbox_radio']"
+                tal:condition="python:input_type in ['radio', 'checkbox', 'checkbox_radio', 'checkbox_checkboxes']"
                 tal:repeat="option options"
                 tal:content="python:hasattr(options, 'getValue') and options.getValue(option) or option "/>
             <th class="nosort" style="text-transform: none;"
-                  tal:condition="python:input_type not in ['radio', 'checkbox', 'checkbox_radio']">
+                  tal:condition="python:input_type not in ['radio', 'checkbox', 'checkbox_radio', 'checkbox_checkboxes']">
                 Select Option
             </th>
         </tr>
@@ -130,8 +130,36 @@
 
                 </td>
 
+                <td tal:condition="python:input_type == 'checkbox_checkboxes'"
+                    tal:repeat="option question/getQuestionOptions">
+                    <input type="checkbox"
+                           class="noborder cbm"
+                           name="answer"
+                           value="option"
+                           tal:condition="repeat/option/start"
+                           tal:define="answer python:request.get(str(qid) + '-' + str(mqid), None) or matrix_question.getAnswerFor(member_id);"
+                           tal:attributes="value option;
+                                           name string:${qid}-${mqid};
+                                           id string:${qid}-${mqid};
+                                           checked python: answer and option in answer;"/>
+                    <input type="checkbox"
+                           class="noborder cbx"
+                           tal:condition="not:repeat/option/start"
+                           tal:define="answer python:request.get(str(qid) + '-' + str(mqid), None) or matrix_question.getAnswerFor(member_id);"
+                           tal:attributes="value option;
+                                           name string:${qid}-${mqid};
+                                           id string:${qid}-${mqid};
+                                           checked python: answer and option in answer;
+                                           disabled python:" />
+
+
+                </td>
+
                 <div tal:condition="python:input_type == 'checkbox_radio'"
-                    tal:content="structure python:matrix_question.getScript(qid, mqid)"></div>
+                    tal:content="structure python:matrix_question.getScript(qid, mqid, input_type)"></div>
+                <div tal:condition="python:input_type == 'checkbox_checkboxes'"
+                    tal:content="structure python:matrix_question.getScript(qid, mqid, input_type)"></div>
+
 
 
             </div>

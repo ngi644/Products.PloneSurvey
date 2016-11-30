@@ -68,8 +68,7 @@
                            class string:g_${qid}">
 
                    <option class="noborder" value="0"
-                            i18n:translate="Please select"
-                            tal:condition="not:null_value">-- Please, select --</option>
+                            i18n:translate="Please select">-- Please, select --</option>
                     <option tal:repeat="op_lv1 option_1st"
                             class="noborder"
                             tal:attributes="value repeat/op_lv1/number;
@@ -84,8 +83,7 @@
                            class string:g_${qid}">
 
                    <option class="noborder" value=""
-                            i18n:translate="Please select"
-                            tal:condition="not:null_value">-- Please, select --</option>
+                            i18n:translate="Please select">-- Please, select --</option>
                     <tal:lv2 tal:repeat="op_itm option_items">
                         <option tal:repeat="op_d python:op_itm[1]"
                             class="noborder"

@@ -97,28 +97,49 @@ class SurveyMatrix(ATCTOrderedFolder, BaseQuestion):
 
     security.declareProtected(permissions.View, 'getScript')
 
-    def getScript(self, qid, mqid):
+    def getScript(self, qid, mqid, input_type='checkbox_radio'):
 
         id_title = "{qid}-{mqid}".format(qid=qid, mqid=mqid)
-        sc = """
-                    <script>
+        if input_type == 'checkbox_radio':
+            sc = """
+                        <script>
 
-                        $('input[name="{id_title}"][type="checkbox"]').change(function() {{
-                            if ( $(this).is(':checked') ){{
+                            $('input[name="{id_title}"][type="checkbox"]').change(function() {{
+                                if ( $(this).is(':checked') ){{
+                                    $('input[name="{id_title}"][type="radio"]').prop('disabled', false);
+                                }} else {{
+                                    $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
+                                }}
+                            }});
+
+                            if ( $('input[name="{id_title}"][type="checkbox"]').is(':checked') ){{
                                 $('input[name="{id_title}"][type="radio"]').prop('disabled', false);
                             }} else {{
                                 $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
                             }}
-                        }});
 
-                        if ( $('input[name="{id_title}"][type="checkbox"]').is(':checked') ){{
-                            $('input[name="{id_title}"][type="radio"]').prop('disabled', false);
-                        }} else {{
-                            $('input[name="{id_title}"][type="radio"]').prop('disabled', true);
-                        }}
+                        </script>
+            """.format(id_title=id_title)
+        else:
+            sc = """
+                        <script>
 
-                    </script>
-        """.format(id_title=id_title)
+                            $('input[name="{id_title}"][type="checkbox"].cbm').change(function() {{
+                                if ( $(this).is(':checked') ){{
+                                    $('input[name="{id_title}"][type="checkbox"].cbx').prop('disabled', false);
+                                }} else {{
+                                    $('input[name="{id_title}"][type="checkbox"].cbx').prop('disabled', true);
+                                }}
+                            }});
+
+                            if ( $('input[name="{id_title}"][type="checkbox"].cbm').is(':checked') ){{
+                                $('input[name="{id_title}"][type="checkbox"].cbx').prop('disabled', false);
+                            }} else {{
+                                $('input[name="{id_title}"][type="checkbox"].cbx').prop('disabled', true);
+                            }}
+
+                        </script>
+            """.format(id_title=id_title)
         return sc
 
 registerATCT(SurveyMatrix, PROJECTNAME)

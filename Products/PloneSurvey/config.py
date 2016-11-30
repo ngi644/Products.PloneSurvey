@@ -52,6 +52,7 @@ SELECT_INPUT_TYPE_MATRIX = DisplayList((
                          default=u'Multiple Selection Box')),
     ('checkbox', _(u'label_check_boxes', default=u'Check Boxes')),
     ('checkbox_radio', _(u'label_check_boxe_radio_buttons', default=u'Check Box + Radio Buttons')),
+    ('checkbox_checkboxes', _(u'label_check_box_check_boxes', default=u'Check Box + Check Boxes')),
     ))
 
 TEXT_LOCATION = IntDisplayList((
