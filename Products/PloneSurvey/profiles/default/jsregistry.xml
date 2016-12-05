@@ -3,6 +3,7 @@
 
    <javascript cacheable="True" compression="safe" cookable="True"
     enabled="True"
+               expression="python: context.portal_type in ('Survey', 'Sub Survey', 'Survey Matrix')"
     id="++resource++Products.PloneSurvey.javascripts/jquery-1.7.1.min.js" inline="False"/>
 
  <javascript cacheable="True" compression="safe" cookable="True"
@@ -12,6 +13,7 @@
 
   <javascript cacheable="True" compression="safe" cookable="True"
     enabled="True"
+              expression="python: context.portal_type in ('Survey', 'Sub Survey', 'Survey Matrix', 'Survey Select Question')"
     id="++resource++Products.PloneSurvey.javascripts/jquery.tgHierSelectV2.js" inline="False"/>
 
 </object>
